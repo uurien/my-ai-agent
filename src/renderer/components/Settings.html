@@ -1,0 +1,16 @@
+<section class="main">
+  <form class="settings-form" @submit.prevent="saveApiKey">
+    <div class="form-group">
+      <label for="api-key">OpenAI API Key</label>
+      <input 
+        type="password" 
+        id="api-key" 
+        v-model="apiKey" 
+        placeholder="sk-..." 
+        class="form-input"
+      >
+    </div>
+    <button type="submit" class="form-button">Save</button>
+  </form>
+</section>
+

@@ -1,0 +1,36 @@
+<section class="main chat">
+  <div class="chat-messages" ref="messagesContainer">
+    <div 
+      v-for="(msg, index) in messages" 
+      :key="index"
+      class="chat-message markdown-body"
+    >
+      <div v-html="parsedMessage(msg.message)"></div>
+      <div 
+        v-for="(action, actionIndex) in msg.actions" 
+        :key="actionIndex"
+        class="action-container"
+      >
+        <div v-html="parsedMessage('```command\n' + action.command + '\n```')"></div>
+        <button class="action-button" @click="executeCommand(action.command)">
+          Run command
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input">
+    <textarea 
+      v-model="messageInput" 
+      @keydown="handleKeydown"
+      :disabled="isSending"
+      class="textarea" 
+      placeholder="Type your message here..."
+    ></textarea>
+    <div class="buttons">
+      <button class="chat-input-button" @click="sendMessage" :disabled="isSending">
+        <span class="material-icons">send</span>
+      </button>
+    </div>
+  </div>
+</section>
+
