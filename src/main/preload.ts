@@ -27,6 +27,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getHistory: () => ipcRenderer.invoke('get-history'),
   onCommandExecuted: (callback: (data: { command: string; explanation: string; result: string }) => void) => {
     ipcRenderer.on('command-executed', (_, data) => callback(data));
+  },
+  onAskConfirmation: (callback: (data: { command: string; explanation: string; severity: number }) => void) => {
+    ipcRenderer.on('ask-confirmation', (_, data) => callback(data));
+  },
+  askConfirmationReturn: (data: boolean) => {
+    ipcRenderer.send('ask-confirmation-return', data);
   }
 });
 

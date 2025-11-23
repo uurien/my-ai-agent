@@ -59,9 +59,18 @@ async function sendMessageToLLM(
           explanation: {
             type: 'string',
             description: 'Brief explanation of what this command does and why it\'s being executed'
+          },
+          severity: {
+            type: 'number',
+            description: `The severity of the command (0 = low, 1 = medium, 2 = high). This is used to determine the risk of the command.
+- Severity 0 (Low): Only for completely innocuous commands that don't access sensitive information, don't modify the system, and don't delete files. Examples: "ls -la", "ps aux", "kubectl get pods", "date", "whoami".
+- Severity 1 (Medium): Commands that access sensitive information, delete files, or modify system configuration. Examples: "cat /etc/passwd", "rm file.txt", "kubectl delete pod <name>", accessing logs with sensitive data.
+- Severity 2 (High): Commands that can cause data loss, system instability, or significant impact. Examples: "rm -rf /", "reboot", "shutdown", "kubectl delete namespace", destructive operations.
+Rule of thumb: If a command accesses sensitive information (passwords, keys, personal data, system configs) or modifies/deletes anything, it should be at least severity 1. Only truly read-only, non-sensitive commands should be severity 0.
+            `,
           }
         },
-        required: ['command', 'explanation']
+        required: ['command', 'explanation', 'severity']
       }
     }
   }];
@@ -137,27 +146,51 @@ async function sendMessageToLLM(
     if (toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
         if (toolCall.function?.name === 'execute_command') {
-          // TODO ask confirmation to the user before executing the command
+          // TODO ask confirmation to the user before executing the command when severity is medium or high
           try {
             const args = JSON.parse(toolCall.function.arguments);
             const command = args.command;
             const explanation = args.explanation;
-            
-            actions.push({ command, explanation });
+            const severity = args.severity;
+            let executeAction: boolean = true
+            const cancelledMessage = 'User cancelled the command'
+            if (severity >= 1) {
+              executeAction = false;
+              // TODO ask confirmation to the user before executing the command
+              mainWindow?.webContents.send('ask-confirmation', { command, explanation, severity })
+
+              executeAction = await new Promise(resolve => {
+                ipcMain.once('ask-confirmation-return', (event, data) => {
+                  resolve(data);
+                });
+              });
+
+              if (executeAction) {
+                actions.push({ command, explanation, severity });
+              }
+            } else {
+              actions.push({ command, explanation, severity });
+            }
             
             // Execute the command
             try {
-              const result = await executeCommand(command);
-              
+              let result = ''
+              if (executeAction) {
+                result = await executeCommand(command);
+              } else {
+                result = cancelledMessage;
+              }
+
               // Add tool result to history
               messageHistory.push({
                 role: 'tool',
                 tool_call_id: toolCall.id,
                 content: result.trim()
               });
-              
+
               // Send command execution info to renderer
               if (mainWindow) {
+
                 mainWindow.webContents.send('command-executed', { command, explanation, result: result.trim() });
               }
             } catch (error: any) {

@@ -16,8 +16,6 @@ function createWindow(): void {
     }
   });
 
-  mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
-
   // Forward console messages from renderer to main process stdout
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
     const levelMap: { [key: number]: string } = {
@@ -29,6 +27,8 @@ function createWindow(): void {
     const levelName = levelMap[level] || 'log';
     (console as any)[levelName](`[Renderer] ${message}`);
   });
+
+  mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
 }
 
 function initializeApp(): void {

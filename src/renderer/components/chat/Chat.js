@@ -118,7 +118,11 @@ export default {
       finalizeStreamingMessage('**Error:** ' + error, []);
     });
 
-    
+    window.electronAPI?.onAskConfirmation((data) => {
+      const confirmed = window.confirm(`Are you sure you want to execute the command ${data.command}? ${data.explanation}`)
+      console.log('confirmed', confirmed);
+      window.electronAPI?.askConfirmationReturn(confirmed);
+    });
 
     const sendMessage = async () => {
       const message = messageInput.value.trim();
