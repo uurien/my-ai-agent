@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   askConfirmationReturn: (data: boolean) => {
     ipcRenderer.send('ask-confirmation-return', data);
-  }
+  },
+  updateMessagesInUI: (messages: any[]) => ipcRenderer.invoke('update-messages-in-ui', messages)
 });
 

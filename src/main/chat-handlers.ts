@@ -36,7 +36,8 @@ Rule of thumb: If a command accesses sensitive information (passwords, keys, per
   }
 }];
 
-const messageHistory: any[] = [];
+let messageHistory: any[] = [];
+let messagesInUI: any[] = [];
 
 let systemDescription = 'You are AI Agent, a helpful assistant specialized in system administration.';
 
@@ -252,8 +253,18 @@ export function registerChatHandlers(getMainWindow: () => BrowserWindow | null):
     console.error('Unable to load completions system description:', error);
   }
 
+  const history = (store as any).get('history', { messagesInUI: [], messageHistory: [] });
+  
+  messagesInUI = history.messagesInUI;
+  messageHistory = history.messageHistory;
+
   ipcMain.handle('get-history', () => {
-    return messageHistory;
+    return messagesInUI;
+  });
+
+  ipcMain.handle('update-messages-in-ui', (event, messages: any[]) => {
+    messagesInUI = messages;
+    (store as any).set('history', { messagesInUI, messageHistory });
   });
 
   // IPC handler to send message with streaming

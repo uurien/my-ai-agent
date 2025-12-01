@@ -8,6 +8,13 @@ export default {
     const { ref, nextTick } = Vue;
     
     const messages = ref([]);
+
+    window.electronAPI?.getHistory().then((messagesInTheUI) => {
+      messages.value.splice(0)
+      messages.value.push(...messagesInTheUI);
+      scrollToBottom();
+    });
+
     const messageInput = ref('');
     const isSending = ref(false);
     const messagesContainer = ref(null);
@@ -85,6 +92,11 @@ export default {
         currentStreamingContent = '';
         scrollToBottom();
       }
+
+      window.electronAPI?.updateMessagesInUI(JSON.parse(JSON.stringify(messages.value)))
+        .catch((error) => {
+          console.error('Error updating messages in UI:', error);
+        });
     };
 
     const handleKeydown = (e) => {
@@ -120,7 +132,6 @@ export default {
 
     window.electronAPI?.onAskConfirmation((data) => {
       const confirmed = window.confirm(`Are you sure you want to execute the command ${data.command}? ${data.explanation}`)
-      console.log('confirmed', confirmed);
       window.electronAPI?.askConfirmationReturn(confirmed);
     });
 
