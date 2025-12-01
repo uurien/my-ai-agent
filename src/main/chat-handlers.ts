@@ -5,6 +5,37 @@ import { ipcMain, BrowserWindow } from 'electron';
 import OpenAI from 'openai';
 import { store } from './settings-handlers';
 
+const tools = [{
+  type: 'function' as const,
+  function: {
+    name: 'execute_command',
+    description: 'Execute a shell command on the macOS system. Use this when you need to run commands to get information or perform actions.',
+    parameters: {
+      type: 'object',
+      properties: {
+        command: {
+          type: 'string',
+          description: 'The shell command to execute (e.g., "ls -la", "ps aux", "kubectl get pods")'
+        },
+        explanation: {
+          type: 'string',
+          description: 'Brief explanation of what this command does and why it\'s being executed'
+        },
+        severity: {
+          type: 'number',
+          description: `The severity of the command (0 = low, 1 = medium, 2 = high). This is used to determine the risk of the command.
+- Severity 0 (Low): Only for completely innocuous commands that don't access sensitive information, don't modify the system, and don't delete files. Examples: "ls -la", "ps aux", "kubectl get pods", "date", "whoami".
+- Severity 1 (Medium): Commands that access sensitive information, delete files, or modify system configuration. Examples: "cat /etc/passwd", "rm file.txt", "kubectl delete pod <name>", accessing logs with sensitive data.
+- Severity 2 (High): Commands that can cause data loss, system instability, or significant impact. Examples: "rm -rf /", "reboot", "shutdown", "kubectl delete namespace", destructive operations.
+Rule of thumb: If a command accesses sensitive information (passwords, keys, personal data, system configs) or modifies/deletes anything, it should be at least severity 1. Only truly read-only, non-sensitive commands should be severity 0.
+          `,
+        }
+      },
+      required: ['command', 'explanation', 'severity']
+    }
+  }
+}];
+
 const messageHistory: any[] = [];
 
 let systemDescription = 'You are AI Agent, a helpful assistant specialized in system administration.';
@@ -22,10 +53,153 @@ async function executeCommand(command: string): Promise<string> {
   });
 }
 
+
+// TODO make this method recursive to handle follow up messages properly
+async function sendMessageToLLMRecursive(
+  messages: { role: string, content: string }[],
+  mainWindow: BrowserWindow,
+  client: OpenAI
+) {
+  messageHistory.push(...messages);
+
+  const stream = await client.chat.completions.create({
+    model: 'gpt-4o-mini',
+    temperature: 0.2,
+    stream: true,
+    messages: messageHistory,
+    tools: tools,
+    tool_choice: 'auto'
+  });
+
+  let fullReply = '';
+  let toolCalls: any[] = [];
+  
+  for await (const chunk of stream) {
+    const delta = chunk.choices[0]?.delta;
+    // Handle content chunks
+    const content = delta?.content || '';
+    if (content) {
+      fullReply += content;
+      if (mainWindow) {
+        mainWindow.webContents.send('message-chunk', content);
+      }
+    }
+    
+    // Handle tool calls
+    if (delta?.tool_calls) {
+      for (const toolCall of delta.tool_calls) {
+        if (toolCall.index !== undefined) {
+          // Initialize tool call if new
+          if (!toolCalls[toolCall.index]) {
+            toolCalls[toolCall.index] = {
+              id: toolCall.id,
+              type: toolCall.type,
+              function: {
+                name: '',
+                arguments: ''
+              }
+            };
+          }
+          
+          // Accumulate function name and arguments
+          if (toolCall.function?.name) {
+            toolCalls[toolCall.index].function.name += toolCall.function.name;
+          }
+          if (toolCall.function?.arguments) {
+            toolCalls[toolCall.index].function.arguments += toolCall.function.arguments;
+          }
+        }
+      }
+    }
+  }
+
+  // Add assistant message with tool calls if any
+  const assistantMessage: any = {
+    role: 'assistant',
+    content: fullReply.trim()
+  };
+  
+  if (toolCalls.length > 0) {
+    assistantMessage.tool_calls = toolCalls;
+  }
+  
+  messageHistory.push(assistantMessage);
+
+  const actions: unknown[] = [];
+  if (toolCalls.length > 0) {
+    const followUpMessages: any[] = []
+    for (const toolCall of toolCalls) {
+      if (toolCall.function?.name === 'execute_command') {
+        try {
+          const args = JSON.parse(toolCall.function.arguments);
+          const command = args.command;
+          const explanation = args.explanation;
+          const severity = args.severity;
+          let executeAction: boolean = true
+          const cancelledMessage = 'User cancelled the command'
+          if (severity >= 1) {
+            executeAction = false;
+            // TODO ask confirmation to the user before executing the command
+            mainWindow?.webContents.send('ask-confirmation', { command, explanation, severity })
+
+            executeAction = await new Promise(resolve => {
+              ipcMain.once('ask-confirmation-return', (event, data) => {
+                resolve(data);
+              });
+            });
+
+            if (executeAction) {
+              actions.push({ command, explanation, severity });
+            }
+          } else {
+            actions.push({ command, explanation, severity });
+          }
+          
+          // Execute the command
+          try {
+            let result = ''
+            if (executeAction) {
+              result = await executeCommand(command);
+            } else {
+              result = cancelledMessage;
+            }
+
+            // Add tool result to history
+            followUpMessages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              content: result.trim()
+            });
+          } catch (error: any) {
+            // Add error to history
+            followUpMessages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              content: `Error: ${error.message || error}: ${error.stderr}`
+            });
+          }
+        } catch (error) {
+          console.error('Error parsing tool call arguments:', error);
+        }
+      }
+    }
+
+    if (followUpMessages.length > 0) {
+      fullReply += '\n\n' + await sendMessageToLLMRecursive(followUpMessages, mainWindow, client);
+    }
+  }
+
+  return fullReply;
+}
+
 async function sendMessageToLLM(
   message: { role: string, content: string },
   mainWindow: BrowserWindow | null
 ) {
+  if (!mainWindow) {
+    throw new Error('MainWindow is not available');
+  }
+
   const apiKey = (store as any).get('apiKey', '') as string;
 
   if (!apiKey) {
@@ -41,199 +215,9 @@ async function sendMessageToLLM(
     });
   }
 
-  messageHistory.push(message);
-
   // Define the execute_command tool
-  const tools = [{
-    type: 'function' as const,
-    function: {
-      name: 'execute_command',
-      description: 'Execute a shell command on the macOS system. Use this when you need to run commands to get information or perform actions.',
-      parameters: {
-        type: 'object',
-        properties: {
-          command: {
-            type: 'string',
-            description: 'The shell command to execute (e.g., "ls -la", "ps aux", "kubectl get pods")'
-          },
-          explanation: {
-            type: 'string',
-            description: 'Brief explanation of what this command does and why it\'s being executed'
-          },
-          severity: {
-            type: 'number',
-            description: `The severity of the command (0 = low, 1 = medium, 2 = high). This is used to determine the risk of the command.
-- Severity 0 (Low): Only for completely innocuous commands that don't access sensitive information, don't modify the system, and don't delete files. Examples: "ls -la", "ps aux", "kubectl get pods", "date", "whoami".
-- Severity 1 (Medium): Commands that access sensitive information, delete files, or modify system configuration. Examples: "cat /etc/passwd", "rm file.txt", "kubectl delete pod <name>", accessing logs with sensitive data.
-- Severity 2 (High): Commands that can cause data loss, system instability, or significant impact. Examples: "rm -rf /", "reboot", "shutdown", "kubectl delete namespace", destructive operations.
-Rule of thumb: If a command accesses sensitive information (passwords, keys, personal data, system configs) or modifies/deletes anything, it should be at least severity 1. Only truly read-only, non-sensitive commands should be severity 0.
-            `,
-          }
-        },
-        required: ['command', 'explanation', 'severity']
-      }
-    }
-  }];
-
   try {
-    const stream = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      temperature: 0.2,
-      stream: true,
-      messages: messageHistory,
-      tools: tools,
-      tool_choice: 'auto'
-    });
-
-    let fullReply = '';
-    let toolCalls: any[] = [];
-    
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta;
-      
-      // Handle content chunks
-      const content = delta?.content || '';
-      if (content) {
-        fullReply += content;
-        if (mainWindow) {
-          mainWindow.webContents.send('message-chunk', content);
-        }
-      }
-      
-      // Handle tool calls
-      if (delta?.tool_calls) {
-        for (const toolCall of delta.tool_calls) {
-          if (toolCall.index !== undefined) {
-            // Initialize tool call if new
-            if (!toolCalls[toolCall.index]) {
-              toolCalls[toolCall.index] = {
-                id: toolCall.id,
-                type: toolCall.type,
-                function: {
-                  name: '',
-                  arguments: ''
-                }
-              };
-            }
-            
-            // Accumulate function name and arguments
-            if (toolCall.function?.name) {
-              toolCalls[toolCall.index].function.name += toolCall.function.name;
-            }
-            if (toolCall.function?.arguments) {
-              toolCalls[toolCall.index].function.arguments += toolCall.function.arguments;
-            }
-          }
-        }
-      }
-    }
-
-    // Add assistant message with tool calls if any
-    const assistantMessage: any = {
-      role: 'assistant',
-      content: fullReply.trim()
-    };
-    
-    if (toolCalls.length > 0) {
-      assistantMessage.tool_calls = toolCalls;
-    }
-    
-    messageHistory.push(assistantMessage);
-
-    const actions: unknown[] = [];
-    
-    // Execute tool calls
-    if (toolCalls.length > 0) {
-      for (const toolCall of toolCalls) {
-        if (toolCall.function?.name === 'execute_command') {
-          // TODO ask confirmation to the user before executing the command when severity is medium or high
-          try {
-            const args = JSON.parse(toolCall.function.arguments);
-            const command = args.command;
-            const explanation = args.explanation;
-            const severity = args.severity;
-            let executeAction: boolean = true
-            const cancelledMessage = 'User cancelled the command'
-            if (severity >= 1) {
-              executeAction = false;
-              // TODO ask confirmation to the user before executing the command
-              mainWindow?.webContents.send('ask-confirmation', { command, explanation, severity })
-
-              executeAction = await new Promise(resolve => {
-                ipcMain.once('ask-confirmation-return', (event, data) => {
-                  resolve(data);
-                });
-              });
-
-              if (executeAction) {
-                actions.push({ command, explanation, severity });
-              }
-            } else {
-              actions.push({ command, explanation, severity });
-            }
-            
-            // Execute the command
-            try {
-              let result = ''
-              if (executeAction) {
-                result = await executeCommand(command);
-              } else {
-                result = cancelledMessage;
-              }
-
-              // Add tool result to history
-              messageHistory.push({
-                role: 'tool',
-                tool_call_id: toolCall.id,
-                content: result.trim()
-              });
-
-              // Send command execution info to renderer
-              if (mainWindow) {
-
-                mainWindow.webContents.send('command-executed', { command, explanation, result: result.trim() });
-              }
-            } catch (error: any) {
-              // Add error to history
-              messageHistory.push({
-                role: 'tool',
-                tool_call_id: toolCall.id,
-                content: `Error: ${error.message || error}: ${error.stderr}`
-              });
-            }
-          } catch (error) {
-            console.error('Error parsing tool call arguments:', error);
-          }
-        }
-      }
-      
-      // If there were tool calls, get a follow-up response
-      // TODO this should be recursive, the actions in the follow up response are totally ignored
-      const followUpStream = await client.chat.completions.create({
-        model: 'gpt-4o-mini',
-        temperature: 0.2,
-        stream: true,
-        messages: messageHistory
-      });
-      
-      let followUpReply = '';
-      for await (const chunk of followUpStream) {
-        const content = chunk.choices[0]?.delta?.content || '';
-        if (content) {
-          followUpReply += content;
-          if (mainWindow) {
-            mainWindow.webContents.send('message-chunk', content);
-          }
-        }
-      }
-      
-      messageHistory.push({
-        role: 'assistant',
-        content: followUpReply.trim()
-      });
-      
-      fullReply += '\n\n' + followUpReply.trim();
-    }
+    const fullReply = await sendMessageToLLMRecursive([message], mainWindow, client);
     
     // Send completion signal
     if (mainWindow) {

@@ -35,7 +35,7 @@ function initializeApp(): void {
   // Register IPC handlers
   registerSettingsHandlers();
   registerChatHandlers(() => mainWindow);
-}
+          }
 
 app.whenReady().then(() => {
   initializeApp();
