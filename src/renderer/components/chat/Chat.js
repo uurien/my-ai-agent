@@ -21,6 +21,11 @@ export default {
     let currentStreamingMessage = null;
     let currentStreamingContent = '';
     if (!window.electronAPI) {
+      for (let i = 0; i < 110; i++) {
+        messages.value.push({
+          message: 'Dummy message without actions'
+        })
+      }
       messages.value.push({
         message: 'Dummy message without actions'
       })

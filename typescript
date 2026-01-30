@@ -1,0 +1,139 @@
+Script started on Thu Dec  4 12:56:24 2025
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Kccd ..[?1l>[?2004l
+]2;cd ..]1;cd[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36muurien[00m [Ksscript ls[?1l>[?2004l
+]2;script ls]1;scriptScript started, output file is ls
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [K[?1h=[?2004hccd m
+[J[1;36mmagnet-game[0m/      [J[1;36mmarket-pulse-ai[0m/  [J[1;36mmockapi[0m/          [J[1;36mmy-ai-agent[0m/    [J[A[0m[27m[24m[10Ccd m[Ky-ai-agent[1m/[0m[0m [?1l>[?2004l
+[J]2;cd my-ai-agent]1;cd[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Klls[?1l>[?2004l
+]2;ls -G]1;lsLICENSE.md        [31mbuild.sh[39;49m[0m          [1m[36mnode_modules[39;49m[0m      package.json      test-prompts.txt  test.txt          typescript
+README.md         [1m[36mdist[39;49m[0m              package-lock.json [1m[36msrc[39;49m[0m               test.js           tsconfig.json
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hccd tycc[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hccat tye pescript[1m [0m[0m [?1l>[?2004l
+]2;cat typescript]1;catScript started on Thu Dec  4 12:56:24 2025
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Kccd ..[?1l>[?2004l
+]2;cd ..]1;cd[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36muurien[00m [Ksscript ls[?1l>[?2004l
+]2;script ls]1;scriptScript started, output file is ls
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [K[?1h=[?2004hccd m
+[J[1;36mmagnet-game[0m/      [J[1;36mmarket-pulse-ai[0m/  [J[1;36mmockapi[0m/          [J[1;36mmy-ai-agent[0m/    [J[A[0m[27m[24m[10Ccd m[Ky-ai-agent[1m/[0m[0m [?1l>[?2004l
+[J]2;cd my-ai-agent]1;cd[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Klls[?1l>[?2004l
+]2;ls -G]1;lsLICENSE.md        [31mbuild.sh[39;49m[0m          [1m[36mnode_modules[39;49m[0m      package.json      test-prompts.txt  test.txt          typescript
+README.md         [1m[36mdist[39;49m[0m              package-lock.json [1m[36msrc[39;49m[0m               test.js           tsconfig.json
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hccd tycc[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hccat tye[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hsscript -q test.txt /bin/zsh[?1l>[?2004l
+]2;script -q test.txt /bin/zsh]1;script[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Knnode test.
+[J[0mtest.js   [Jtest.txt[J[A[0m[27m[24m[28Cnode test.[Kjs[?1l>[?2004l
+[J]2;node test.js]1;node[33mtrue[39m
+/Users/ugaitz.urien/github.com/uurien/my-ai-agent/test.js:31
+    const child = spawn('script', ['-q', 'test.txt', '/bin/zsh'],
+                  ^
+
+ReferenceError: spawn is not defined
+    at [90m/Users/ugaitz.urien/github.com/uurien/my-ai-agent/[39mtest.js:31:19
+[90m    at FSReqCallback.oncomplete (node:fs:185:23)[39m
+
+Node.js v24.11.1
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hnode test.js[?1l>[?2004l
+]2;node test.js]1;node[33mtrue[39m
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hnode test.js[?1l>[?2004l
+]2;node test.js]1;node[33mtrue[39m
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hnode test.js[?1l>[?2004l
+]2;node test.js]1;node[33mtrue[39m
+/Users/ugaitz.urien/github.com/uurien/my-ai-agent/test.js:40
+    child.stdin.write('ls\n');
+                ^
+
+TypeError: Cannot read properties of null (reading 'write')
+    at [90m/Users/ugaitz.urien/github.com/uurien/my-ai-agent/[39mtest.js:40:17
+[90m    at FSReqCallback.oncomplete (node:fs:185:23)[39m
+
+Node.js v24.11.1
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hnode test.js[?1l>[?2004l
+]2;node test.js]1;node[33mtrue[39m
+/Users/ugaitz.urien/github.com/uurien/my-ai-agent/test.js:40
+    child.stdin.write('ls\n');
+                ^
+
+TypeError: Cannot read properties of null (reading 'write')
+    at [90m/Users/ugaitz.urien/github.com/uurien/my-ai-agent/[39mtest.js:40:17
+[90m    at FSReqCallback.oncomplete (node:fs:185:23)[39m
+
+Node.js v24.11.1
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [Knode test.js[?1l>[?2004l
+]2;node test.js]1;node[33mtrue[39m
+script: tcgetattr/ioctl: Operation not supported on socket
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;32m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hnnpm run dev[?1l>[?2004l
+]2;npm run dev]1;npm
+> my-ai-agent@1.0.0 dev
+> rm -rf dist && tsc && cp -r src/renderer dist/renderer && cp -r src/resources dist/ && electron . --dev
+
+innerError Error: Cannot find module '../build/Debug/pty.node'
+Require stack:
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/unixTerminal.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/index.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/terminal-handlers.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/main.js
+[90m    at Module._resolveFilename (node:internal/modules/cjs/loader:1390:15)[39m
+[90m    at s._resolveFilename (node:electron/js2c/browser_init:2:130470)[39m
+[90m    at defaultResolveImpl (node:internal/modules/cjs/loader:1032:19)[39m
+[90m    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1037:22)[39m
+[90m    at Module._load (node:internal/modules/cjs/loader:1199:37)[39m
+[90m    at c._load (node:electron/js2c/node_init:2:17993)[39m
+[90m    at TracingChannel.traceSync (node:diagnostics_channel:328:14)[39m
+[90m    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)[39m
+[90m    at Module.require (node:internal/modules/cjs/loader:1470:12)[39m
+[90m    at require (node:internal/modules/helpers:147:16)[39m {
+  code: [32m'MODULE_NOT_FOUND'[39m,
+  requireStack: [
+    [32m'/Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/unixTerminal.js'[39m,
+    [32m'/Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/index.js'[39m,
+    [32m'/Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/terminal-handlers.js'[39m,
+    [32m'/Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/main.js'[39m
+  ]
+}
+App threw an error during load
+Error: Cannot find module '../build/Release/pty.node'
+Require stack:
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/unixTerminal.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/node_modules/node-pty/lib/index.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/terminal-handlers.js
+- /Users/ugaitz.urien/github.com/uurien/my-ai-agent/dist/main/main.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1390:15)
+    at s._resolveFilename (node:electron/js2c/browser_init:2:130470)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1032:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1037:22)
+    at Module._load (node:internal/modules/cjs/loader:1199:37)
+    at c._load (node:electron/js2c/node_init:2:17993)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)
+    at Module.require (node:internal/modules/cjs/loader:1470:12)
+    at require (node:internal/modules/helpers:147:16)
+^C^C^Ce^C^C^C^X^Z2025-12-04 14:11:55.530 Electron[43828:63217265] +[IMKClient subclass]: chose IMKClient_Modern
+2025-12-04 14:11:55.530 Electron[43828:63217265] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+^M^M^C[1]    43778 terminated  npm run dev
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004he[?1l>[?2004l
+]2;e]1;ezsh: command not found: e
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004heexit[?1l>[?2004l
+]2;exit]1;exit[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hscript -q test.txt /bin/zsh[27D                           [27Dpps p  [?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien/my-ai-agent]1;..n/my-ai-agent]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien/my-ai-agent\[0m[27m[24m[J[01;31m➜  [36mmy-ai-agent[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004heexit[?1l>[?2004l
+]2;exit]1;exit
+Script done, output file is ls
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;31m➜  [36muurien[00m [K[?1h=[?2004hlls[?1l>[?2004l
+]2;ls -G]1;ls[1m[36mcircletap[39;49m[0m                [1m[36mgh-photo-manager[39;49m[0m         [1m[36mllmbench[39;49m[0m                 [1m[36mmy-ai-agent[39;49m[0m              [1m[36msummapress[39;49m[0m               [1m[36murienenea-webapp[39;49m[0m
+[1m[36mclick-race-online[39;49m[0m        [1m[36mholpor[39;49m[0m                   [1m[36mllmspinup[39;49m[0m                [1m[36mnews-summarizer[39;49m[0m          [1m[36mtotrain[39;49m[0m                  [1m[36muurien-dashboard[39;49m[0m
+[1m[36mdummy-llm[39;49m[0m                [1m[36mholpor-old[39;49m[0m               [1m[36mmagnet-game[39;49m[0m              [1m[36mnoviasfarah[39;49m[0m              [1m[36mubuntu-k8s[39;49m[0m               [1m[36muurien.github.io[39;49m[0m
+[1m[36mee-32-fastfossgame[39;49m[0m       [1m[36mkalefit-sign-up[39;49m[0m          [1m[36mmarket-pulse-ai[39;49m[0m          [1m[36mofficial-news-summarizer[39;49m[0m [1m[36mubuntu-torrent-ecosystem[39;49m[0m www.noviasfarah.com.zip
+[1m[36mfinance-viewer[39;49m[0m           ls                       [1m[36mmockapi[39;49m[0m                  [1m[36mrpi-k8s[39;49m[0m                  [1m[36murienenea-api[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [K[?1h=[?2004h[?1l>[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                   ]2;ugaitz.urien@MacBook-Air-de-Ugaitz:~/github.com/uurien]1;..ub.com/uurien]7;file://MacBook-Air-de-Ugaitz.local/Users/ugaitz.urien/github.com/uurien\[0m[27m[24m[J[01;32m➜  [36muurien[00m [K[?1h=[?2004heexit[?1l>[?2004l
+]2;exit]1;exit
+Script done on Thu Dec  4 14:15:02 2025

@@ -8,17 +8,20 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="external/xterm/xterm.js"></script>
+  <link rel="stylesheet" href="external/xterm/xterm.css">
   <script type="module" src="index.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div>
     <nav>
       <h1><span>Chat</span></h1>
       <a href="settings.html" class="icon" title="Settings">
         <span class="material-icons">settings</span>
       </a>
     </nav>
-    <Chat></Chat>
+    <div id="app">
+    </div>
   </div>
 </body>
 </html>

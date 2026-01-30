@@ -2,13 +2,14 @@ import * as path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { registerSettingsHandlers } from './settings-handlers';
 import { registerChatHandlers } from './chat-handlers';
+import { registerTerminalHandlers } from './terminal-handlers';
 
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
-    width: 400,
-    height: 600,
+    width: 1400,
+    height: 700,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -35,7 +36,8 @@ function initializeApp(): void {
   // Register IPC handlers
   registerSettingsHandlers();
   registerChatHandlers(() => mainWindow);
-          }
+  registerTerminalHandlers(() => mainWindow);
+}
 
 app.whenReady().then(() => {
   initializeApp();

@@ -34,6 +34,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   askConfirmationReturn: (data: boolean) => {
     ipcRenderer.send('ask-confirmation-return', data);
   },
-  updateMessagesInUI: (messages: any[]) => ipcRenderer.invoke('update-messages-in-ui', messages)
+  updateMessagesInUI: (messages: any[]) => ipcRenderer.invoke('update-messages-in-ui', messages),
+  terminalInitialize: () => ipcRenderer.invoke('terminal-initialize'),
+  writeTerminalData: (data: string) => ipcRenderer.invoke('write-terminal-data', data),
+  resizeTerminal: (cols: number, rows: number) => ipcRenderer.invoke('resize-terminal', cols, rows),
+  onDataOnTerminal: (callback: (data: string) => void) => {
+    console.log('onDataOnTerminal');
+    ipcRenderer.on('data-on-terminal', (_, data) => callback(data));
+  }
 });
 

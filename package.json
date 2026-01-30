@@ -4,7 +4,7 @@
   "description": "Agente AI especialista en administración de sistemas",
   "main": "dist/main/main.js",
   "scripts": {
-    "build": "rm -rf dist && tsc && cp -r src/renderer dist/renderer && cp -r src/resources dist/",
+    "build": "./build.sh",
     "start": "npm run build && electron .",
     "dev": "rm -rf dist && tsc && cp -r src/renderer dist/renderer && cp -r src/resources dist/ && electron . --dev",
     "build:app": "npm run build && electron-builder"
@@ -28,8 +28,11 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@xterm/xterm": "^5.5.0",
     "dotenv": "^17.2.3",
+    "electron-rebuild": "^3.2.9",
     "electron-store": "^11.0.2",
+    "node-pty": "^1.0.0",
     "openai": "^6.9.1",
     "vue": "^3.5.24"
   },

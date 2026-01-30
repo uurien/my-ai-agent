@@ -48,11 +48,10 @@ button {
 }
 
 .main {
-    position: absolute;
     left: 0;
     top: 30px;
     width: 100%;
-    height: calc(100% - 30px);
+    height: 100%;
     margin: 0;
     padding: 0;
 }
@@ -201,4 +200,37 @@ nav .icon .material-icons {
 
 .markdown-body pre code {
   font-size: 1rem;
+}
+
+.terminal-and-chat {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.terminal {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#terminal {
+  width: 100%;
+  height: 100%;
+}
+
+.terminal-container {
+  flex: 1;
+  height: 100%;
+}
+
+.chat-container {
+  width: 400px;
+  height: 100%;
+  position: relative;
 }

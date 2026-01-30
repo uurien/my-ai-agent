@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import { ipcMain, BrowserWindow } from 'electron';
 import OpenAI from 'openai';
 import { store } from './settings-handlers';
+import { executeCommand } from './terminal-handlers';
 
 const tools = [{
   type: 'function' as const,
@@ -41,7 +42,9 @@ let messagesInUI: any[] = [];
 
 let systemDescription = 'You are AI Agent, a helpful assistant specialized in system administration.';
 
-async function executeCommand(command: string): Promise<string> {
+async function executeCommand2(command: string): Promise<string> {
+  // TODO this command should be executed in the terminal using the terminal-handlers.ts file
+  // and should return the output in the returning promise
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
