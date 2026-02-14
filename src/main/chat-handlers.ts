@@ -42,22 +42,6 @@ let messagesInUI: any[] = [];
 
 let systemDescription = 'You are AI Agent, a helpful assistant specialized in system administration.';
 
-async function executeCommand2(command: string): Promise<string> {
-  // TODO this command should be executed in the terminal using the terminal-handlers.ts file
-  // and should return the output in the returning promise
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        error.stderr = stderr;
-        reject(error);
-      } else {
-        resolve(stdout);
-      }
-    });
-  });
-}
-
-
 // TODO make this method recursive to handle follow up messages properly
 async function sendMessageToLLMRecursive(
   messages: { role: string, content: string }[],
