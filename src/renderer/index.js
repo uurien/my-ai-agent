@@ -12,10 +12,12 @@ async function initApp() {
   // Create component with template and setup
   const Chat = {
     template: chatTemplate,
+    props: ['tabId'],
     setup: ChatComponent.setup
   };
   const Terminal = {
     template: terminalTemplate,
+    props: ['tabId'],
     setup: TerminalComponent.setup
   };
 

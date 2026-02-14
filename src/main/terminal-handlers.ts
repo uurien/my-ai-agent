@@ -6,14 +6,14 @@ import * as os from 'os';
 
 const shell = '/bin/zsh';
 
-let ptyProcess: any;
+const ptyProcesses: Map<string, any> = new Map();
 const PROMPT_READY = '\u001b]999;PROMPT_READY\u0007'
 const CWD_EXTRACTOR_REGEX = /\u001b\]7;(.*)\u0007/;
 
-let pwd = '';
+const pwdMap: Map<string, string> = new Map();
 
-export function getPwd(): string {
-  return pwd;
+export function getPwd(tabId: string): string {
+  return pwdMap.get(tabId) || '';
 }
 
 // Detectar si hay un programa interactivo activo
@@ -71,8 +71,9 @@ function detectCommandEnd(output: string, lastActivityTime: number): boolean {
   return false;
 }
 
-export function executeCommand(command: string, timeout: number = 30000): Promise<string> {
+export function executeCommand(tabId: string, command: string, timeout: number = 30000): Promise<string> {
   return new Promise((resolve, reject) => {
+    const ptyProcess = ptyProcesses.get(tabId);
     if (!ptyProcess) {
       reject(new Error('Terminal not initialized'));
       return;
@@ -125,19 +126,22 @@ export function executeCommand(command: string, timeout: number = 30000): Promis
 }
 
 export function registerTerminalHandlers(getMainWindow: () => BrowserWindow | null): void {
-  ipcMain.handle('write-terminal-data', (event, data: string) => {
-    ptyProcess.write(data);
-    console.log('process', ptyProcess.process);
+  ipcMain.handle('write-terminal-data', (event, tabId: string, data: string) => {
+    const ptyProcess = ptyProcesses.get(tabId);
+    if (ptyProcess) {
+      ptyProcess.write(data);
+    }
   });
 
-  ipcMain.handle('resize-terminal', (event, cols: number, rows: number) => {
+  ipcMain.handle('resize-terminal', (event, tabId: string, cols: number, rows: number) => {
+    const ptyProcess = ptyProcesses.get(tabId);
     if (ptyProcess) {
       ptyProcess.resize(cols, rows);
     }
   });
 
-  ipcMain.handle('terminal-initialize', (event) => {
-    if (!ptyProcess) {
+  ipcMain.handle('terminal-initialize', (event, tabId: string) => {
+    if (!ptyProcesses.has(tabId)) {
       const zdotdir = fs.mkdtempSync(path.join(os.tmpdir(), "my-ai-agent-zsh-"));
       const zshrc = `
 # Load user's config (optional). Keep their prompt.
@@ -159,7 +163,7 @@ __myterm_precmd() {
 
       fs.writeFileSync(path.join(zdotdir, ".zshrc"), zshrc, "utf8");
 
-      ptyProcess = pty.spawn(
+      const ptyProcess = pty.spawn(
         shell, [], 
         {
           name: 'xterm-color',
@@ -175,15 +179,26 @@ __myterm_precmd() {
         ptyProcess.onData((data: any) => {
           chunk += data?.toString();
           if (chunk.includes(PROMPT_READY)) {
-            pwd = CWD_EXTRACTOR_REGEX.exec(chunk)?.[1] || pwd;
-            // console.log('PWD', pwd);
+            const currentPwd = CWD_EXTRACTOR_REGEX.exec(chunk)?.[1] || pwdMap.get(tabId) || '';
+            pwdMap.set(tabId, currentPwd);
             console.log('regex result', CWD_EXTRACTOR_REGEX.exec(chunk));
             chunk = '';
           }
 
           const mainWindow = getMainWindow();
-          mainWindow?.webContents.send('data-on-terminal', data);
+          mainWindow?.webContents.send('data-on-terminal', tabId, data);
         });
+
+      ptyProcesses.set(tabId, ptyProcess);
     }
-  });  
+  });
+
+  ipcMain.handle('terminal-destroy', (event, tabId: string) => {
+    const ptyProcess = ptyProcesses.get(tabId);
+    if (ptyProcess) {
+      ptyProcess.kill();
+      ptyProcesses.delete(tabId);
+      pwdMap.delete(tabId);
+    }
+  });
 }

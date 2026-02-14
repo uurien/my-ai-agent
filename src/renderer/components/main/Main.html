@@ -1,8 +1,23 @@
-<section class="terminal-and-chat">
-    <div class="terminal-container">
-        <Terminal></Terminal>
+<section>
+    <div class="tab-bar">
+        <div
+            v-for="tab in tabs"
+            :key="tab.id"
+            class="tab"
+            :class="{ active: tab.id === activeTabId }"
+            @click="switchTab(tab.id)"
+        >
+            <span class="tab-name">{{ tab.name }}</span>
+            <button class="tab-close" @click.stop="closeTab(tab.id)" v-if="tabs.length > 1">&times;</button>
+        </div>
+        <button class="tab-add" @click="createTab">+</button>
     </div>
-    <div class="chat-container">
-        <Chat></Chat>
+    <div v-for="tab in tabs" :key="'content-' + tab.id" class="terminal-and-chat" v-show="tab.id === activeTabId">
+        <div class="terminal-container">
+            <Terminal :tab-id="tab.id"></Terminal>
+        </div>
+        <div class="chat-container">
+            <Chat :tab-id="tab.id"></Chat>
+        </div>
     </div>
 </section>

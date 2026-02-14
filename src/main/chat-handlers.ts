@@ -37,24 +37,44 @@ Rule of thumb: If a command accesses sensitive information (passwords, keys, per
   }
 }];
 
-let messageHistory: any[] = [];
-let messagesInUI: any[] = [];
+// Per-tab state
+const messageHistories: Map<string, any[]> = new Map();
+const messagesInUIMap: Map<string, any[]> = new Map();
 
 let systemDescription = 'You are AI Agent, a helpful assistant specialized in system administration.';
 
-// TODO make this method recursive to handle follow up messages properly
+function saveAllHistories(): void {
+  const allHistories: Record<string, any> = {};
+  for (const [tabId, history] of messageHistories) {
+    allHistories[tabId] = {
+      messagesInUI: messagesInUIMap.get(tabId) || [],
+      messageHistory: history
+    };
+  }
+  (store as any).set('tabHistories', allHistories);
+}
+
+function getMessageHistory(tabId: string): any[] {
+  if (!messageHistories.has(tabId)) {
+    messageHistories.set(tabId, []);
+  }
+  return messageHistories.get(tabId)!;
+}
+
 async function sendMessageToLLMRecursive(
+  tabId: string,
   messages: { role: string, content: string }[],
   mainWindow: BrowserWindow,
   client: OpenAI
 ) {
-  messageHistory.push(...messages);
+  const history = getMessageHistory(tabId);
+  history.push(...messages);
 
   const stream = await client.chat.completions.create({
     model: 'gpt-4o-mini',
     temperature: 0.2,
     stream: true,
-    messages: messageHistory,
+    messages: history,
     tools: tools,
     tool_choice: 'auto'
   });
@@ -69,7 +89,7 @@ async function sendMessageToLLMRecursive(
     if (content) {
       fullReply += content;
       if (mainWindow) {
-        mainWindow.webContents.send('message-chunk', content);
+        mainWindow.webContents.send('message-chunk', { tabId, chunk: content });
       }
     }
     
@@ -111,7 +131,7 @@ async function sendMessageToLLMRecursive(
     assistantMessage.tool_calls = toolCalls;
   }
   
-  messageHistory.push(assistantMessage);
+  history.push(assistantMessage);
 
   const actions: unknown[] = [];
   if (toolCalls.length > 0) {
@@ -127,13 +147,16 @@ async function sendMessageToLLMRecursive(
           const cancelledMessage = 'User cancelled the command'
           if (severity >= 1) {
             executeAction = false;
-            // TODO ask confirmation to the user before executing the command
-            mainWindow?.webContents.send('ask-confirmation', { command, explanation, severity })
+            mainWindow?.webContents.send('ask-confirmation', { tabId, command, explanation, severity })
 
             executeAction = await new Promise(resolve => {
-              ipcMain.once('ask-confirmation-return', (event, data) => {
-                resolve(data);
-              });
+              const handler = (event: any, data: any) => {
+                if (data.tabId === tabId) {
+                  ipcMain.removeListener('ask-confirmation-return', handler);
+                  resolve(data.confirmed);
+                }
+              };
+              ipcMain.on('ask-confirmation-return', handler);
             });
 
             if (executeAction) {
@@ -147,7 +170,7 @@ async function sendMessageToLLMRecursive(
           try {
             let result = ''
             if (executeAction) {
-              result = await executeCommand(command);
+              result = await executeCommand(tabId, command);
             } else {
               result = cancelledMessage;
             }
@@ -173,7 +196,7 @@ async function sendMessageToLLMRecursive(
     }
 
     if (followUpMessages.length > 0) {
-      fullReply += '\n\n' + await sendMessageToLLMRecursive(followUpMessages, mainWindow, client);
+      fullReply += '\n\n' + await sendMessageToLLMRecursive(tabId, followUpMessages, mainWindow, client);
     }
   }
 
@@ -181,6 +204,7 @@ async function sendMessageToLLMRecursive(
 }
 
 async function sendMessageToLLM(
+  tabId: string,
   message: { role: string, content: string },
   mainWindow: BrowserWindow | null
 ) {
@@ -196,8 +220,9 @@ async function sendMessageToLLM(
 
   const client = new OpenAI({ apiKey });
 
-  if (messageHistory.length === 0) {
-    messageHistory.push({
+  const history = getMessageHistory(tabId);
+  if (history.length === 0) {
+    history.push({
       role: 'system',
       content: systemDescription
     });
@@ -205,11 +230,11 @@ async function sendMessageToLLM(
 
   // Define the execute_command tool
   try {
-    const fullReply = await sendMessageToLLMRecursive([message], mainWindow, client);
+    const fullReply = await sendMessageToLLMRecursive(tabId, [message], mainWindow, client);
     
     // Send completion signal
     if (mainWindow) {
-      mainWindow.webContents.send('message-complete', { reply: fullReply.trim() });
+      mainWindow.webContents.send('message-complete', { tabId, reply: fullReply.trim() });
     }
     
     return {
@@ -219,7 +244,7 @@ async function sendMessageToLLM(
   } catch (error) {
     console.error('Error calling OpenAI API:', error);
     if (mainWindow) {
-      mainWindow.webContents.send('message-error', error instanceof Error ? error.message : 'Failed to get response from OpenAI API.');
+      mainWindow.webContents.send('message-error', { tabId, error: error instanceof Error ? error.message : 'Failed to get response from OpenAI API.' });
     }
     throw new Error('Failed to get response from OpenAI API.');
   }
@@ -240,40 +265,57 @@ export function registerChatHandlers(getMainWindow: () => BrowserWindow | null):
     console.error('Unable to load completions system description:', error);
   }
 
-  const history = (store as any).get('history', { messagesInUI: [], messageHistory: [] });
-  
-  messagesInUI = history.messagesInUI;
-  messageHistory = history.messageHistory;
+  // Load per-tab histories
+  const allHistories = (store as any).get('tabHistories', {});
+  for (const [tabId, history] of Object.entries(allHistories as Record<string, any>)) {
+    messagesInUIMap.set(tabId, history.messagesInUI || []);
+    messageHistories.set(tabId, history.messageHistory || []);
+  }
 
-  ipcMain.handle('get-history', () => {
-    return messagesInUI;
+  // Tab management
+  ipcMain.handle('get-tabs', () => {
+    return (store as any).get('tabs', null);
   });
 
-  ipcMain.handle('update-messages-in-ui', (event, messages: any[]) => {
-    messagesInUI = messages;
-    (store as any).set('history', { messagesInUI, messageHistory });
+  ipcMain.handle('save-tabs', (event, tabsData: any) => {
+    (store as any).set('tabs', tabsData);
+  });
+
+  // Chat handlers — all with tabId
+  ipcMain.handle('get-history', (event, tabId: string) => {
+    return messagesInUIMap.get(tabId) || [];
+  });
+
+  ipcMain.handle('update-messages-in-ui', (event, tabId: string, messages: any[]) => {
+    messagesInUIMap.set(tabId, messages);
+    saveAllHistories();
   });
 
   // IPC handler to send message with streaming
-  ipcMain.handle('send-message', async (event, message: string) => {
-    return await sendMessageToLLM({
+  ipcMain.handle('send-message', async (event, tabId: string, message: string) => {
+    return await sendMessageToLLM(tabId, {
       role: 'user',
       content: message
     }, getMainWindow());
   });
 
-  ipcMain.handle('execute-command', async (event, command: string) => {
+  ipcMain.handle('execute-command', async (event, tabId: string, command: string) => {
     const mainWindow = getMainWindow();
-    const result = await executeCommand(command);
+    const result = await executeCommand(tabId, command);
     
     // Send command result to LLM
     const commandOutput = result.trim();
     const resultMessage = `Command executed: ${command}\n\nOutput:\n${commandOutput}`;
     
-    return await sendMessageToLLM({
+    return await sendMessageToLLM(tabId, {
       role: 'user',
       content: resultMessage
     }, mainWindow);
   });
-}
 
+  ipcMain.handle('delete-tab-history', (event, tabId: string) => {
+    messageHistories.delete(tabId);
+    messagesInUIMap.delete(tabId);
+    saveAllHistories();
+  });
+}

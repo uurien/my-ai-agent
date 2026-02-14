@@ -1,48 +1,25 @@
 // Chat Component Logic
 export default {
+  props: ['tabId'],
   async loadTemplate() {
     const response = await fetch('components/chat/Chat.html');
     return await response.text();
   },
-  setup() {
-    const { ref, nextTick } = Vue;
+  setup(props) {
+    const { ref, nextTick, onMounted, onUnmounted } = Vue;
     
     const messages = ref([]);
-
-    window.electronAPI?.getHistory().then((messagesInTheUI) => {
-      messages.value.splice(0)
-      messages.value.push(...messagesInTheUI);
-      scrollToBottom();
-    });
-
     const messageInput = ref('');
     const isSending = ref(false);
     const messagesContainer = ref(null);
     let currentStreamingMessage = null;
     let currentStreamingContent = '';
-    if (!window.electronAPI) {
-      for (let i = 0; i < 110; i++) {
-        messages.value.push({
-          message: 'Dummy message without actions'
-        })
-      }
-      messages.value.push({
-        message: 'Dummy message without actions'
-      })
 
-      messages.value.push({
-        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-      })
-
-      messages.value.push({
-        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        actions: [
-          {
-            command: 'ls -la'
-          }
-        ]
-      })
-    }
+    // Cleanup functions for IPC listeners
+    let cleanupChunk = null;
+    let cleanupComplete = null;
+    let cleanupError = null;
+    let cleanupConfirmation = null;
 
     const parsedMessage = (message) => {
       return marked.parse(message || '');
@@ -98,7 +75,7 @@ export default {
         scrollToBottom();
       }
 
-      window.electronAPI?.updateMessagesInUI(JSON.parse(JSON.stringify(messages.value)))
+      window.electronAPI?.updateMessagesInUI(props.tabId, JSON.parse(JSON.stringify(messages.value)))
         .catch((error) => {
           console.error('Error updating messages in UI:', error);
         });
@@ -115,30 +92,13 @@ export default {
       try {
         isSending.value = true;
         
-        await window.electronAPI?.executeCommand(command);
+        await window.electronAPI?.executeCommand(props.tabId, command);
       } catch (error) {
         addMessage('**Error executing command:** ' + error.message);
       } finally {
         isSending.value = false;
       }
     };
-
-    window.electronAPI?.onMessageChunk((chunk) => {
-      updateStreamingMessage(chunk);
-    });
-
-    window.electronAPI?.onMessageComplete((data) => {
-      finalizeStreamingMessage(data.reply, data.actions || []);
-    });
-
-    window.electronAPI?.onMessageError((error) => {
-      finalizeStreamingMessage('**Error:** ' + error, []);
-    });
-
-    window.electronAPI?.onAskConfirmation((data) => {
-      const confirmed = window.confirm(`Are you sure you want to execute the command ${data.command}? ${data.explanation}`)
-      window.electronAPI?.askConfirmationReturn(confirmed);
-    });
 
     const sendMessage = async () => {
       const message = messageInput.value.trim();
@@ -152,13 +112,73 @@ export default {
         messageInput.value = '';
         addMessage(message);
         
-        await window.electronAPI?.sendMessage(message);
+        await window.electronAPI?.sendMessage(props.tabId, message);
       } catch (error) {
         addMessage('Error: ' + error.message);
       } finally {
         isSending.value = false;
       }
     };
+
+    onMounted(() => {
+      // Load history for this tab
+      window.electronAPI?.getHistory(props.tabId).then((messagesInTheUI) => {
+        if (messagesInTheUI && messagesInTheUI.length > 0) {
+          messages.value.splice(0);
+          messages.value.push(...messagesInTheUI);
+          scrollToBottom();
+        }
+      });
+
+      // Set up IPC listeners (filtered by tabId)
+      cleanupChunk = window.electronAPI?.onMessageChunk((data) => {
+        if (data.tabId === props.tabId) {
+          updateStreamingMessage(data.chunk);
+        }
+      });
+
+      cleanupComplete = window.electronAPI?.onMessageComplete((data) => {
+        if (data.tabId === props.tabId) {
+          finalizeStreamingMessage(data.reply, data.actions || []);
+        }
+      });
+
+      cleanupError = window.electronAPI?.onMessageError((data) => {
+        if (data.tabId === props.tabId) {
+          finalizeStreamingMessage('**Error:** ' + data.error, []);
+        }
+      });
+
+      cleanupConfirmation = window.electronAPI?.onAskConfirmation((data) => {
+        if (data.tabId === props.tabId) {
+          const confirmed = window.confirm(`Are you sure you want to execute the command ${data.command}? ${data.explanation}`);
+          window.electronAPI?.askConfirmationReturn(data.tabId, confirmed);
+        }
+      });
+    });
+
+    onUnmounted(() => {
+      if (cleanupChunk) cleanupChunk();
+      if (cleanupComplete) cleanupComplete();
+      if (cleanupError) cleanupError();
+      if (cleanupConfirmation) cleanupConfirmation();
+    });
+
+    // Dummy messages for development without Electron
+    if (!window.electronAPI) {
+      for (let i = 0; i < 10; i++) {
+        messages.value.push({
+          message: 'Dummy message without actions'
+        });
+      }
+      messages.value.push({
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      });
+      messages.value.push({
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        actions: [{ command: 'ls -la' }]
+      });
+    }
 
     return {
       messages,
@@ -172,4 +192,3 @@ export default {
     };
   }
 };
-
