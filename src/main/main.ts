@@ -1,8 +1,29 @@
 import * as path from 'path';
+import { execSync } from 'child_process';
 import { app, BrowserWindow } from 'electron';
 import { registerSettingsHandlers } from './settings-handlers';
 import { registerChatHandlers } from './chat-handlers';
 import { registerTerminalHandlers } from './terminal-handlers';
+
+// Fix PATH for packaged apps launched from Finder/Dock
+// (they only get the minimal system PATH: /usr/bin:/bin:/usr/sbin:/sbin)
+function fixPath(): void {
+  if (process.platform !== 'darwin' && process.platform !== 'linux') return;
+  try {
+    const shell = process.env.SHELL || '/bin/zsh';
+    const result = execSync(`${shell} -ilc 'printf "%s" "$PATH"'`, {
+      encoding: 'utf-8',
+      timeout: 5000
+    });
+    if (result) {
+      process.env.PATH = result;
+    }
+  } catch (e) {
+    console.error('fixPath failed:', e);
+  }
+}
+
+fixPath();
 
 let mainWindow: BrowserWindow | null = null;
 

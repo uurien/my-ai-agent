@@ -28,7 +28,6 @@ nav {
     position: fixed;
     top: 8px;
     right: 8px;
-    left: 8px;
     z-index: 1000;
 }
 
@@ -49,7 +48,7 @@ button {
 
 .main {
     left: 0;
-    top: 30px;
+    top: 0px;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -208,7 +207,7 @@ nav .icon .material-icons {
   flex-direction: row;
   align-items: center;
   position: fixed;
-  top: 30px;
+  top: 0px;
   left: 0;
   right: 0;
   height: 32px;
@@ -279,7 +278,7 @@ nav .icon .material-icons {
   display: flex;
   flex-direction: row;
   position: absolute;
-  top: 62px;
+  top: 32px;
   left: 0;
   right: 0;
   bottom: 0;
